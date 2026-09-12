@@ -14,8 +14,10 @@ tags:
     - [[#标量]]（整型、浮点、字符串）
     - [[#数组]]
     - [[#哈希]]
-
-
+    - [[#特殊字符]]
+- [[#条件语句]]
+- [[#循环]]
+- [[#运算符]]（与Linux命令调用有关）
 
 ## 运行Prel
 `$ perl script.pl` 运行prel脚本
@@ -312,12 +314,6 @@ $string2 = join(' ', @string);    # "www runoob com"
 
 排序，`sort([指定规则], 数组)`，如`@a = sort(@a);`，按ASCII码进行排序，建议在排序前全部转成小写
 
-合并数组
-```perl
-# perl的数组是扁平化的一维数组，不能嵌套。嵌入到数组会被摊平
-@numbers = (1,3,(4,5,6));    # (1, 3, 4, 5, 6)
-
-```
 
 
 ### 哈希
@@ -327,12 +323,53 @@ $string2 = join(' ', @string);    # "www runoob com"
 #!/usr/bin/perl
 
 # 这两种方法都可以创建哈希变量
-%h=('a'=>1,'b'=>2);
-%data = ('google', 45, 'runoob', 30, 'taobao', 40);
+%h=('a'=>1,'b'=>2);    # =>
+%data = ('google', 45, 'runoob', 'runoob.com', 'taobao', 40);  # 通过列表创建
 
-print "\$h{'a'} is $h{'a'}\n" 
-print "\$data{'google'} = $data{'google'}\n";
-print "\$data{'runoob'} = $data{'runoob'}\n";
+print "\$h{'a'} is $h{'a'}\n";     # 1
+print "\$data{'google'} = $data{'google'}\n";    # 45
+print "\$data{'runoob'} = $data{'runoob'}\n";    # runoob.com
+
+# 为key设置value
+$data{'google'} = 'google.com';
+
+# 也可以使用 '-' 来代替引号，这样key不能出现空格
+%data = (-google=>'google.com', -runoob=>'runoob.com', -taobao=>'taobao.com');
+$val = $data{-google};  # 使用'-'代替引号读取元素
+
+# 像数组一样从哈希中提取值
+@array = @data{-taobao, -runoob};    # （'taobao.com', 'runoob.com'）
+
+# 读取哈希的所有键和值
+@names = keys %data;  # taobao google runoob  使用keys获取所有key
+@urls = values %data; # taobao.com runoob.com google.com  获取所有value
+
+# 为了避免读取到不存在的键值对，导致警告提醒。可以使用函数exists来判断key是否存在
+if( exists($data{'facebook'} ) ){
+    print "facebook 的网址为 $data{'facebook'} \n";
+} else {
+    print "facebook 键不存在\n";
+}
+
+# 获取哈希大小
+@keys = keys %data;    # 获取所有key
+$size = @keys;         # 获取所有key数组的长度，从而得知哈希的大小
+# 获取所有values来计算哈希的大小同理
+
+# 添加元素
+$data{'facebook'} = 'facebook.com';
+
+# 删除哈希中的元素 （需要使用delete函数）
+delete $data{'taobao'};
+
+# 迭代哈希 （使用foreach 和 while）
+foreach $key (keys %data){
+    print "$data{$key}\n";
+}
+
+while(($key, $value) = each(%data)){
+    print "$data{$key}\n";
+}
 ```
 
 
@@ -349,3 +386,271 @@ print "包名 " . __PACKAGE__ ."\n";   # 包名 main
 # 直接写在字符串中不显示，输出    __FILE__ __LINE__ __PACKAGE__
 print "__FILE__ __LINE__ __PACKAGE__\n";
 ```
+
+
+
+## 条件语句
+---
+数字`0`, 字符串 `'0'` 、 `""` , 空 list() , 和 `undef` 为 **false** ，其他值均为 **true**。`! true`和`not true`为`false`
+
+perl提供了以下条件语句
+- [[#if]]
+- [[#if-else]]
+- [[#if-elsif-else]]
+- [[#unless]]
+- [[#unless-else]]
+- [[#unless-elsif-else]]
+- [[#三元运算符 ?]]
+
+### if
+```perl
+# if(boolean_expression){
+#    # 在布尔表达式 boolean_expression 为 true 执行
+# }
+$a = 10;
+if( $a < 20 ){
+    printf "a 小于 20\n";
+}
+```
+
+### if-else
+```perl
+# if(boolean_expression){
+#     # 在布尔表达式 boolean_expression 为 true 执行
+# }else{
+#    # 在布尔表达式 boolean_expression 为 false 执行
+# }
+$a = "";
+if ($a){
+    printf "true\n";
+} else {
+    printf "false\n";
+}
+```
+
+### if-elsif-else
+```perl
+$age = 30;
+if ( $age == 0 ){
+    print "too young\n";
+} elsif ( $age <= 18 ){
+    print "未成年\n";
+} elsif ( $age <= 40 ){
+    print "壮年\n"
+} else {
+    print "\$age is $age\n";
+}
+```
+
+### unless
+设计这个语法的人指定有点大病
+```perl
+# unless(boolean_expression){
+#     # 在布尔表达式 boolean_expression 为 false 执行
+# }
+$a = 20;
+unless( $a < 20 ){
+    printf "a 大于等于 20\n";
+}
+
+# 运行结果[输出]：  a 大于等于 20
+```
+
+### unless-else
+```perl
+# unless(boolean_expression){
+#     # 在布尔表达式 boolean_expression 为 false 执行
+# }else{
+#     # 在布尔表达式 boolean_expression 为 true 执行
+# }
+$a = 100;
+unless( $a == 20 ){ 
+    printf "给定的条件为 false\n \$a 不等于 20";
+}else{
+    printf "给定的条件为 true\n  \$a 等于 20";
+}
+
+# 运行结果[输出]：
+#     给定的条件为 false
+#      $a 不等于 20
+```
+
+### unless-elsif-else
+```perl
+# unless(boolean_expression 1){
+#    # 在布尔表达式 boolean_expression 1 为 false 执行
+# }
+# elsif( boolean_expression 2){
+#    # 在布尔表达式 boolean_expression 2 为 true 执行
+# }
+# elsif( boolean_expression 3){
+#    # 在布尔表达式 boolean_expression 3 为 true 执行
+# }
+# else{
+#    #  没有条件匹配时执行
+# }
+
+$a = 20;
+# 使用 unless 语句检测布尔表达式
+unless( $a  ==  30 ){
+    # 布尔表达式为 false 时执行
+    printf "a 的值不为 30\n";
+}elsif( $a ==  30 ){
+    # 布尔表达式为 true 时执行
+    printf "a 的值为 30\n";
+}else{
+    # 没有条件匹配时执行
+    printf "a  的 值为 $a\n";
+}
+```
+
+### 三元运算符 ? :
+```perl
+# Exp1 ? Exp2 : Exp3;
+# 如果 Exp1 表达式为 true ，则返回 Exp2 表达式计算结果，否则返回 Exp3。
+$a = 10;
+$output = ($a > 5) ? "\$a 大于 5" : "\$a 小于等于 5";
+print "$output";
+```
+
+
+
+### 循环
+---
+- [[#while]]
+- [[#until]]
+- [[#for]]
+- [[#foreach]]
+- [[#do-while]]
+- [[#嵌套]]
+- [[#循环控制语句]]
+
+### while
+```perl
+$a = 10;
+
+while( $a < 20 ){
+   printf "a 的值为 : $a\n";
+   $a = $a + 1;
+}
+```
+
+### until
+until，除非。在条件为 false 时执行
+```perl
+$a = 5;
+
+until( $a > 10 ){
+   printf "a 的值为 : $a\n";
+   $a = $a + 1;
+}
+```
+
+### for
+与C的 for 相似
+```perl
+# for ( init; condition; increment ){
+#     statement(s);
+# }
+# init 首先执行，且仅执行一次。可以为空，分号出现即可
+# condition 为true则运行循环体，false则循环结束
+# 循环题结束后，执行increment更新，以便你更新循环变量。可以为空，分号出现即可
+
+# 相当于 init; while (condition) {statement(s); increment}
+
+for( $a = 0; $a < 10; $a = $a + 1 ){
+    print "a 的值为: $a\n";
+}
+```
+
+### foreach
+迭代
+```perl
+@list = (2, 12, 36, 42, 51);
+
+foreach $a (@list){
+    print "a 的值为: $a\n";
+}
+```
+
+### do-while
+在循环的尾部检查循环条件，循环至少循环一次
+```perl
+$a = 10;
+
+do{
+   printf "a 的值为: $a\n";
+   $a = $a + 1;
+}while( $a < 15 );
+```
+
+### 嵌套
+perl的循环可以嵌套，有其他语言基础可以轻易理解。这里不记
+
+### 循环控制语句
+- `next;` 停止执行后面的语句，回到条件判断语句，进行下一次循环
+- `last;` 结束循环
+- `continue` 块用在`while`和`foreach`中，会在条件语句判断前执行（它是代码块，不是关键字和语句）
+```perl  
+$a = 0;
+while($a < 3){
+   print "a = $a\n";
+}continue{
+   $a = $a + 1;
+}
+
+# 输出：
+# a = 0
+# a = 1
+# a = 2
+
+
+
+@list = (1, 2, 3, 4, 5);
+foreach $a (@list){
+   print "a = $a\n";
+}continue{
+   last if $a == 4;
+}
+
+# 输出：
+# a = 1
+# a = 2
+# a = 3
+# a = 4
+```
+- `redo` 跳转到循环体的第一行重复本次循环，不执行continue语句块
+- `goto <label标签>` 跳转到指定的标签处
+
+
+
+## 运算符
+---
+Perl的运算符过于庞杂，常用运算符与python等基本一致。这里只给出网址，你可以到菜鸟教程的[这篇文章](https://www.runoob.com/perl/perl-operators.html) 对照使用
+
+不过Perl的引号运算或许需要记一记，主要是可以调用linux命令
+
+| 运算符   | 描述        | 实例                    |
+| ----- | --------- | --------------------- |
+| q{ }  | 为字符串添加单引号 | q{abcd} 结果为 'abcd'    |
+| qq{ } | 为字符串添加双引号 | qq{abcd} 结果为 "abcd"   |
+| qx{ } | 为字符串添加反引号 | qx{abcd} 结果为 \`abcd\` |
+```perl
+$a = 10;
+ 
+$b = q{a = $a};
+print "q{a = \$a} = $b\n";    # q{a = $a} = a = $a
+
+$b = qq{a = $a};
+print "qq{a = \$a} = $b\n";    # qq{a = $a} = a = 10
+ 
+# 调用 unix 的 date 命令执行
+$t = qx{date};
+print "qx{date} = $t\n";  # qx{date} = Sat Sep 12 03:20:01 PM CST 2026
+```
+
+
+
+## 子程序（函数）
+---
+后面再补充吧，[Perl子程序（函数）资料](https://www.runoob.com/perl/perl-subroutines.html)，暂时用不到不记太多了。后面再记一下函数、错误处理、正则就差不多了，其他用到再查
