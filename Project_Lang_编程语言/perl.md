@@ -443,7 +443,6 @@ if ( $age == 0 ){
 ```
 
 ### unless
-设计这个语法的人指定有点大病
 ```perl
 # unless(boolean_expression){
 #     # 在布尔表达式 boolean_expression 为 false 执行
