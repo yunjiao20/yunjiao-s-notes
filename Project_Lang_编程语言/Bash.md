@@ -598,7 +598,7 @@ echo "1 and 3 is $?"
 `command1 < infile > outfile`  从infile中读取文件，输出到outfile
 `command 2>file` 将stderr重定向到file
 `command 2>>file` 将stderr追加到file
-`command > file 2>&1` 将stdout和stderr合并后重定向到file
+`command > file 2>&1` 将stdout和stderr合并后重定向到file，**这也让你可以使用`|`传递标准错误的字符**
 `$ command >> file 2>&1`
 
 ```Here Document

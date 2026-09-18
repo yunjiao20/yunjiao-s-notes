@@ -10,6 +10,7 @@ Intel和AT&T汇编语法的差别[[asm汇编(x86)#Intel汇编语法 与 AT&T汇�
 - [[#jmp]]
 - [[#je]]
 - [[#leave]]
+- [[#mov]]
 - [[#ret]]
 
 ### 汇编指令
@@ -38,6 +39,8 @@ Intel和AT&T汇编语法的差别[[asm汇编(x86)#Intel汇编语法 与 AT&T汇�
 ###### jne
 与[[#je]]相反，不相等就跳转。
 ###### leave
-相当于
+相当于`mov rsp, rbp; pop rbp`
+###### mov
+把数据从源位置复制到目标位置，源位置的值不变。如`mov rsp rbp` (Intel)将rbp中的值复制到rsp中，`movl %eax, %ebx` (AT&T)将eax 的值复制到 ebx（`l`意味移动4字节）
 ###### ret
 相当于`pop rip`
