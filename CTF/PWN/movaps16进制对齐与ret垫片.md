@@ -2,14 +2,15 @@
 tags:
   - 2026/9/23
   - pwn
+  - CTF
 ---
 # movaps16进制对齐与ret垫片
 
 x86-64引入了 SSE 指令集，其中，如`movaps`等指令会操作16字节（128位）数据。比如：
 - `movaps`（Move Aligned Packed Single-Precision）一次打包搬运128位（4个32位浮点数 或 2个64位浮点数）
     - `movaps xmm0 [rsp+0x10]` 从内存搬运16字节到XMM寄存器
-    - `movaps`强制要求16位对齐(即名字中Aligned)（即`源操作地址 % 16 == 0`（整除），或者说`源操作地址 % 0x10 == 0`，可以看作`0x`16进制格式下末位必须是0）
-    - 如果不满足16位对齐，会直接触发异常`SIGSEGV` `general protection fault`
+    - `movaps`强制要求16位对齐(即名字中Aligned)（即`源操作地址 % 16 == 0`（整除），或者说`源操作地址 % 0x10 == 0`。可以看作以`0x`开头的16进制格式下末位必须是0）
+    - 如果不满足16位对齐，会直接触发异常`SIGSEGV`、`general protection fault`
 - `movups`是它的unaligned版本，不要求16位对齐，但会略慢
 
 编译器为了性能，优先生成`movaps`
