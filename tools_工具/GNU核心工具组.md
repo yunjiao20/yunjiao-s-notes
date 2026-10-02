@@ -3,7 +3,7 @@ tags:
   - GNU/Linux
   - 2026/9/10
 ---
-记录遇见的 GNU/Linux 上的 `GNU核心工具组` 中的指令。
+f记录遇见的 GNU/Linux 上的 `GNU核心工具组` 中的指令。
 
 [[#man]]  [[#cat]]  [[#chmod]]  [[#cp]]  [[#df]]  [[#du]]  [[#find]]  [[#gunzip]]  [[#grep]]  [[#gzip]]  [[#ls]]  [[#lsblk]]  [[#mkdir]]  [[#mount]]  [[#rm]]  [[#tar]]  [[#umount]]  [[#unxz]]  [[#unzip]]  [[#wc]]  [[#xz]]  [[#zip]]
 
