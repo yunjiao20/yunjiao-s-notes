@@ -1,8 +1,8 @@
 ---
 tags:
   - 2026/10/2
-  - Nignx
   - PHP
+  - Nginx
 ---
 使用了阿里云的三个月免费试用2核2GiB云服务器，为了节省内存进行了Nignx服务器的搭建
 
@@ -74,3 +74,4 @@ nginx: configuration file /etc/nginx/nginx.conf test is successful
 
 
 最后提一嘴，Nginx的网站地址放在`/var/www/html/`下，和Apache一样，有什么HTML放在这里即可
+
