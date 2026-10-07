@@ -1,7 +1,12 @@
+---
+tags:
+  - Windows
+---
+
 [[#基础命令]]
 - [[#ipconfig]]、[[#ping]]、[[#tracert]]、[[#pathping]]、[[#netstat]]、[[#nslookup]]、[[#arp]]、[[#getmac]]、[[#hostname]]、[[#route]]、[[#nbtstat]]
 [[#网络配置和管理]]
-- [[#netsh]]、[[#netstat]]、[[#net]]、[[#ncpa.cpl]]、[[#systeminfo]]、[[#whoami]]
+- [[#netsh]]、[[#netstat]]、[[#net]]、[[#ncpa.cpl]]、[[#systeminfo]]、[[#whoami]]、[[#winver]]、[[#hostname]]、[[#ver]]
 [[#无线网络]]
 [[#远程和服务]]
 - [[#telnet]]、[[#ssh]]、[[#ftp]]、[[#mstsc]]、[[#curl]]、[[#wget]]、[[#certutil]]、[[#bitsadmin]]
@@ -35,7 +40,7 @@ DNS查询诊断工具，检查域名解析，诊断域名解析问题
 #### arp
 查看和修改本机的 ‌ARP 缓存表‌（记录 IP 地址和 MAC 地址的对应关系）。
 `-a`查看缓存表（显示所有接口的 IP 与 MAC 对应关系），`-d [ip | *]`为ip地址时删除
-单条记录，为*是删除全部。`arp -s IP MAC地址`（手动把 IP 和 MAC 固定，防止被 ARP 
+单条记录，为\*时删除全部。`arp -s IP MAC地址`（手动把 IP 和 MAC 固定，防止被 ARP 
 欺骗篡改，重启后会失效，可以编写.bat批处理文件放到windows启动文件夹中固定）
 #### getmac
 直接列出本机所有网卡的 MAC 地址。常用：`getmac /v /fo list`查看详细信息，
@@ -71,6 +76,13 @@ cmd运行此命令后，打开`网络连接`窗口，在这里查看网卡状态
 不带参数查看系统信息，带参数可以查看远程主机信息，使用`systeminfo /?`获取帮助信息
 #### whoami
 `whoami /?`查看所有参数，可以输出当前登录用户的信息
+#### winver
+查看windows版本
+#### hostname
+查看计算机名
+#### ver
+查看系统版本号
+
 
 
 ## 无线网络
