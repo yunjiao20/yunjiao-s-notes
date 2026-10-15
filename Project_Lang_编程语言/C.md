@@ -394,7 +394,7 @@ int main ()
    /* 局部变量定义 */
    char grade = 'B';
  
-   switch(grade)
+   switch(grade) // switch 匹配的值可以是整型、字符型、枚举型
    {
    case 'A' :    // 匹配'A'。case的后面必须是一个常量表达式
       printf("很棒！\n" );
