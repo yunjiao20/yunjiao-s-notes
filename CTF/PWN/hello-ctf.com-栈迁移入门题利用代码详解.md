@@ -36,7 +36,7 @@ int main() {
 ```
 假设上面的内容被放在文件a.c中，请使用`gcc a.c -no-pie -fno-stack-protector`编译，关闭PIE和canary
 
-[[asm汇编指令(x86)#leave]]、[[asm汇编指令(x86)#ret]]，`leave; ret`相当于`mov rsp, rbp; pop rbp; pop rip`，因此使我们可以控制栈底rbp（pop rbp），进而间接控制栈顶rsp（函数顶部`mov rbp, rsp; sub rsp 0x20`）  
+[[asm汇编指令(x86)#leave]]、[[asm汇编指令(x86)#ret]]，`leave; ret`相当于`mov rsp, rbp; pop rbp; pop rip`，因此使我们可以控制栈底rbp（pop rbp），进而间接控制栈顶rsp（leave中的`mov rsp, rbp`）  
   
 下面是使用`radare2`的反汇编
 ```radare2
