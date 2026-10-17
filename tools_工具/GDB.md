@@ -8,4 +8,8 @@ tags:
 
 `因为pwntool环境暂时被破坏，暂时不展示`
 
-在GDB中，
+在GDB中
+
+
+
+# 如何使用原生GDB写PWN题
